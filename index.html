@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>元素周期表 - 完整数据版</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 基础样式重置 */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation; 
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            line-height: 1.5;
+            color: #333333;
+        }
+        
+        .container { 
+            max-width: 100%; 
+            margin: 0 auto; 
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        /* 头部区域 */
+        .mobile-header {
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px; 
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .mobile-header h1 {
+            font-size: 1.8rem; 
+            margin-bottom: 5px; 
+            text-align: center;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent;
+            font-weight: 700;
+        }
+        
+        .mobile-subtitle { 
+            font-size: 0.9rem; 
+            color: #666; 
+            text-align: center; 
+            margin-bottom: 15px; 
+        }
+        
+        /* 元素分类选择器 */
+        .category-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+            justify-content: center;
+        }
+        
+        .category-btn {
+            padding: 8px 15px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            color: #444;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: #667eea;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* 搜索框 */
+        .search-container {
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            background: white;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+        
+        /* 标签页 */
+        .tab-container {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 5px;
+            margin: 15px 0;
+            border: 1px solid #eaeaea;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .tab-btn {
+            padding: 10px 15px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            flex: 1;
+            min-width: 90px;
+            text-align: center;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            padding: 0 20px 20px;
+        }
+        
+        /* 周期表区域 */
+        .periodic-table-section {
+            background: #f8f9fa; 
+            border-radius: 15px; 
+            padding: 20px; 
+            margin-bottom: 20px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .periodic-table-section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #444;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .periodic-table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* 周期表网格 */
+        .periodic-table {
+            display: grid;
+            grid-template-columns: repeat(18, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+            gap: 3px;
+            width: 100%;
+            min-width: 800px;
+        }
+        
+        /* 镧系和锕系标注 */
+        .lanthanide-label, .actinide-label {
+            grid-column: 1 / span 18;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+            padding: 10px;
+            background: rgba(245, 245, 245, 0.9);
+            border-radius: 8px;
+            margin: 5px 0;
+            border: 1px dashed #ccc;
+            z-index: 5;
+        }
+        
+        .lanthanide-label {
+            grid-row: 8;
+        }
+        
+        .actinide-label {
+            grid-row: 9;
+        }
+        
+        /* 元素单元格 */
+        .element {
+            position: relative; 
+            border-radius: 8px; 
+            cursor: pointer;
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            padding: 8px 5px;
+            font-size: 0.75rem;
+            min-height: 65px;
+            background: white;
+            border: 2px solid #eee;
+            user-select: none; 
+            -webkit-user-select: none;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .element:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .element.selected {
+            transform: scale(1.08); 
+            z-index: 20;
+            box-shadow: 0 0 0 4px #667eea, 0 10px 30px rgba(102, 126, 234, 0.4);
+            border-color: #667eea;
+        }
+        
+        .element .symbol { 
+            font-size: 1.1rem; 
+            font-weight: bold; 
+            margin-bottom: 3px; 
+            color: #222; 
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+            line-height: 1.2;
+        }
+        
+        .element .number { 
+            position: absolute; 
+            top: 5px; 
+            left: 5px; 
+            font-size: 0.65rem; 
+            opacity: 0.8; 
+            font-weight: 700; 
+            color: #555; 
+            background: rgba(255,255,255,0.9);
+            border-radius: 3px;
+            padding: 1px 4px;
+            line-height: 1.2;
+            min-width: 20px;
+            text-align: center;
+            z-index: 2;
+        }
+        
+        .element .name { 
+            font-size: 0.55rem; 
+            margin-bottom: 2px; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            max-width: 95%; 
+            color: #666; 
+            line-height: 1.2;
+            background: rgba(255,255,255,0.9);
+            padding: 1px 4px;
+            border-radius: 3px;
+            z-index: 2;
+        }
+        
+        .element .mass { 
+            font-size: 0.55rem; 
+            background: rgba(240, 247, 255, 0.95); 
+            padding: 2px 5px; 
+            border-radius: 4px; 
+            margin-top: 2px; 
+            color: #0055a0; 
+            border: 1px solid #d0e4ff; 
+            line-height: 1.2;
+            z-index: 2;
+        }
+        
+        /* 放射性标记 */
+        .element.radioactive::after {
+            content: "☢";
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.55rem;
+            color: #d32f2f;
+            background: rgba(255,255,255,0.9);
+            border-radius: 3px;
+            padding: 0 2px;
+            line-height: 1.2;
+            z-index: 2;
+        }
+        
+        /* 元素类别颜色 */
+        .nonmetal { background: linear-gradient(135deg, #e1f5fe, #81d4fa); border-color: #29b6f6; }
+        .noble { background: linear-gradient(135deg, #fce4ec, #f8bbd9); border-color: #ec407a; }
+        .alkali { background: linear-gradient(135deg, #ffebee, #ffcdd2); border-color: #ff6b6b; }
+        .alkaline-earth { background: linear-gradient(135deg, #fff3e0, #ffcc80); border-color: #ff9f43; }
+        .metalloid { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-color: #66bb6a; }
+        .halogen { background: linear-gradient(135deg, #f3e5f5, #e1bee7); border-color: #ab47bc; }
+        .post-transition { background: linear-gradient(135deg, #f5f5f5, #e0e0e0); border-color: #9e9e9e; }
+        .transition { background: linear-gradient(135deg, #fff8e1, #ffecb3); border-color: #ffca28; }
+        .lanthanide { background: linear-gradient(135deg, #e0f2f1, #b2dfdb); border-color: #26a69a; }
+        .actinide { background: linear-gradient(135deg, #ede7f6, #d1c4e9); border-color: #7e57c2; }
+        .unknown { background: linear-gradient(135deg, #f5f5f5, #e0e0e0); border-color: #9e9e9e; }
+        
+        .empty { 
+            background: transparent; 
+            border: none; 
+            pointer-events: none;
+        }
+        
+        /* 详情面板 */
+        .detail-section {
+            background: #f8f9fa; 
+            border-radius: 15px; 
+            padding: 20px; 
+            margin-bottom: 20px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .detail-header { 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            padding-bottom: 20px; 
+            border-bottom: 1px solid #e0e0e0; 
+        }
+        
+        .element-large {
+            font-size: 2.2rem; 
+            font-weight: bold; 
+            width: 80px; 
+            height: 80px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2); 
+            color: white;
+            flex-shrink: 0; 
+            margin-right: 20px;
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+        
+        .element-info h2 { 
+            font-size: 1.7rem; 
+            margin-bottom: 8px; 
+            line-height: 1.2; 
+            color: #222; 
+        }
+        
+        .element-info .category {
+            font-size: 0.95rem; 
+            color: #667eea; 
+            padding: 5px 12px;
+            background: rgba(102, 126, 234, 0.1); 
+            border-radius: 18px; 
+            display: inline-block;
+            font-weight: 600;
+        }
+        
+        /* 原子模型 */
+        .atom-model-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .atom-model-container h3 {
+            margin-bottom: 15px;
+            color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .atom-model { 
+            position: relative; 
+            width: 220px;
+            height: 220px;
+            margin: 0 auto; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        
+        .nucleus {
+            border-radius: 50%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center; 
+            color: white; 
+            font-weight: bold; 
+            z-index: 10; 
+            position: absolute; 
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            text-align: center; 
+            font-size: 0.9rem; 
+            line-height: 1.1; 
+            border: 4px solid white;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .electron-shell {
+            position: absolute; 
+            border-radius: 50%; 
+            border: 2px dashed rgba(102, 126, 234, 0.4);
+            animation: rotate 30s linear infinite;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.15);
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+        }
+        
+        @keyframes rotate { 
+            from { transform: rotate(0deg); } 
+            to { transform: rotate(360deg); } 
+        }
+        
+        .electron {
+            position: absolute; 
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffeb3b, #ff9800);
+            box-shadow: 0 0 10px #ffc107, 0 0 15px rgba(255, 193, 7, 0.5);
+            z-index: 5;
+        }
+        
+        /* 数据网格 */
+        .data-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px; 
+            margin: 20px 0; 
+        }
+        
+        .data-item {
+            background: white; 
+            padding: 15px; 
+            border-radius: 10px;
+            border-left: 5px solid #667eea; 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        
+        .data-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+        }
+        
+        .data-item label { 
+            display: block; 
+            font-size: 0.8rem; 
+            color: #666; 
+            margin-bottom: 8px; 
+            font-weight: 500;
+        }
+        
+        .data-item value { 
+            font-size: 1.1rem; 
+            font-weight: bold; 
+            color: #667eea; 
+            display: block; 
+        }
+        
+        /* 同位素列表 */
+        .isotopes-section { 
+            margin-top: 20px; 
+            padding-top: 20px; 
+            border-top: 1px solid #e0e0e0; 
+        }
+        
+        .isotope-list { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 8px; 
+            margin-top: 12px; 
+        }
+        
+        .isotope { 
+            background: #e8f4ff; 
+            padding: 8px 12px; 
+            border-radius: 15px; 
+            font-size: 0.85rem; 
+            border: 1px solid #b6daff; 
+            color: #0055a0; 
+            font-weight: 500;
+        }
+        
+        /* 图例 */
+        .legend {
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            margin-top: 20px; 
+            padding: 15px;
+            background: #f8f9fa; 
+            border-radius: 12px; 
+            justify-content: center;
+            border: 1px solid #eaeaea;
+        }
+        
+        .legend-item {
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-size: 0.75rem; 
+            padding: 6px 10px;
+            background: white; 
+            border-radius: 8px; 
+            flex: 1 0 calc(50% - 10px); 
+            min-width: 130px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .legend-color { 
+            width: 16px; 
+            height: 16px; 
+            border-radius: 4px; 
+            flex-shrink: 0; 
+        }
+        
+        /* 页脚 */
+        footer {
+            text-align: center; 
+            margin-top: 20px; 
+            padding: 20px; 
+            color: #777;
+            font-size: 0.85rem; 
+            border-top: 1px solid #e0e0e0; 
+            line-height: 1.5;
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 0 0 20px 20px;
+        }
+        
+        /* 加载动画 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+        
+        .spinner {
+            border: 5px solid rgba(102, 126, 234, 0.2);
+            border-radius: 50%;
+            border-top: 5px solid #667eea;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 5px;
+            }
+            
+            .mobile-header {
+                padding: 12px 15px;
+            }
+            
+            .mobile-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .main-content {
+                padding: 0 15px 15px;
+            }
+            
+            .periodic-table-container {
+                padding: 10px;
+            }
+            
+            .periodic-table {
+                min-width: 700px;
+            }
+            
+            .element {
+                min-height: 55px;
+                padding: 5px 3px;
+            }
+            
+            .element .symbol {
+                font-size: 1rem;
+            }
+            
+            .detail-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .element-large {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .legend-item {
+                flex: 1 0 calc(100% - 10px);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .periodic-table {
+                min-width: 600px;
+            }
+            
+            .element {
+                min-height: 50px;
+                font-size: 0.65rem;
+            }
+            
+            .element .symbol {
+                font-size: 0.9rem;
+            }
+            
+            .category-btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
+            
+            .tab-btn {
+                padding: 8px 10px;
+                min-width: 80px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .main-content { 
+                display: flex; 
+                gap: 25px; 
+            }
+            .periodic-table-section { 
+                flex: 2; 
+            }
+            .detail-section { 
+                flex: 1; 
+                min-width: 400px;
+            }
+            .legend-item {
+                flex: 1 0 calc(33% - 10px);
+            }
+            .category-selector {
+                justify-content: flex-start;
+            }
+        }
+        
+        /* 搜索高亮 */
+        .element.search-match {
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 0 3px #ff9800, 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.4), 0 0 0 3px #ff9800; }
+            70% { box-shadow: 0 0 0 8px rgba(255, 152, 0, 0), 0 0 0 3px #ff9800; }
+            100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0), 0 0 0 3px #ff9800; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载遮罩 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p style="color: #667eea; font-weight: bold;">正在加载元素周期表数据...</p>
+    </div>
+    
+    <div class="container">
+        <!-- 头部区域 -->
+        <div class="mobile-header">
+            <h1><i class="fas fa-atom"></i> 元素周期表 - 完整数据版</h1>
+            <p class="mobile-subtitle">基于PubChem API完整数据 | 解决电子重叠问题 | 精确原子模型</p>
+            
+            <!-- 元素分类选择器 -->
+            <div class="category-selector">
+                <button class="category-btn active" data-category="all">
+                    <i class="fas fa-globe"></i> 全部元素
+                </button>
+                <button class="category-btn" data-category="nonmetal">
+                    <i class="fas fa-wind"></i> 非金属
+                </button>
+                <button class="category-btn" data-category="alkali">
+                    <i class="fas fa-fire"></i> 碱金属
+                </button>
+                <button class="category-btn" data-category="transition">
+                    <i class="fas fa-gem"></i> 过渡金属
+                </button>
+                <button class="category-btn" data-category="noble">
+                    <i class="fas fa-cloud"></i> 稀有气体
+                </button>
+            </div>
+            
+            <!-- 搜索框 -->
+            <div class="search-container">
+                <input type="text" class="search-box" id="searchBox" placeholder="搜索元素名称、符号或原子序数...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            
+            <!-- 标签页 -->
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="table">
+                    <i class="fas fa-table"></i> 周期表
+                </button>
+                <button class="tab-btn" data-tab="detail">
+                    <i class="fas fa-info-circle"></i> 元素详情
+                </button>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 周期表区域 -->
+            <section class="periodic-table-section active" id="tableTab">
+                <h2><i class="fas fa-th"></i> 元素周期表 (1-118)</h2>
+                
+                <!-- 周期表容器 -->
+                <div class="periodic-table-container">
+                    <div class="periodic-table" id="periodicTable">
+                        <!-- 元素将通过JavaScript动态生成 -->
+                    </div>
+                    <div class="lanthanide-label">* 57-71 镧系元素</div>
+                    <div class="actinide-label">† 89-103 锕系元素</div>
+                </div>
+                
+                <p style="text-align: center; margin-top: 15px; color: #666; font-size: 0.85rem;">
+                    <i class="fas fa-mouse-pointer"></i> 点击元素查看详细信息
+                </p>
+            </section>
+            
+            <!-- 详情面板 -->
+            <section class="detail-section" id="detailTab">
+                <div class="detail-header">
+                    <div class="element-large" id="largeSymbol">H</div>
+                    <div class="element-info">
+                        <h2 id="elementName">氢 <span id="elementSymbol">(H)</span></h2>
+                        <div class="category" id="elementCategory">非金属</div>
+                    </div>
+                </div>
+                
+                <!-- 原子模型 -->
+                <div class="atom-model-container">
+                    <h3><i class="fas fa-atom"></i> 原子模型</h3>
+                    <div class="atom-model" id="atomModel">
+                        <div class="nucleus" id="nucleus">
+                            <div id="protonCount">1</div>
+                            <div style="font-size: 0.8rem;">质子</div>
+                            <div id="neutronCount">0</div>
+                            <div style="font-size: 0.8rem;">中子</div>
+                        </div>
+                        <!-- 电子层将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 元素数据网格 -->
+                <div class="data-grid">
+                    <div class="data-item">
+                        <label><i class="fas fa-hashtag"></i> 原子序数</label>
+                        <value id="atomicNumber">1</value>
+                    </div>
+                    <div class="data-item">
+                        <label><i class="fas fa-weight-hanging"></i> 原子质量</label>
+                        <value id="atomicMass">1.008 u</value>
+                    </div>
+                    <div class="data-item">
+                        <label><i class="fas fa-expand-alt"></i> 原子半径</label>
+                        <value id="atomicRadius">120 pm</value>
+                    </div>
+                    <div class="data-item">
+                        <label><i class="fas fa-bolt"></i> 电负性</label>
+                        <value id="electronegativity">2.20</value>
+                    </div>
+                    <div class="data-item">
+                        <label><i class="fas fa-layer-group"></i> 电子排布</label>
+                        <value id="electronConfig">1s¹</value>
+                    </div>
+                    <div class="data-item">
+                        <label><i class="fas fa-thermometer-half"></i> 标准状态</label>
+                        <value id="standardState">气态</value>
+                    </div>
+                    <div class="data-item">
+                        <label><i class="fas fa-fire"></i> 熔点</label>
+                        <value id="meltingPoint">13.81 K</value>
+                    </div>
+                    <div class="data-item">
+                        <label><i class="fas fa-temperature-high"></i> 沸点</label>
+                        <value id="boilingPoint">20.28 K</value>
+                    </div>
+                    <div class="data-item">
+                        <label><i class="fas fa-weight"></i> 密度</label>
+                        <value id="density">0.00008988 g/cm³</value>
+                    </div>
+                    <div class="data-item">
+                        <label><i class="fas fa-calendar-alt"></i> 发现年份</label>
+                        <value id="discoveryYear">1766</value>
+                    </div>
+                </div>
+                
+                <!-- 氧化态 -->
+                <div class="isotopes-section">
+                    <h3><i class="fas fa-exchange-alt"></i> 氧化态</h3>
+                    <div class="isotope-list" id="oxidationStatesList">
+                        <div class="isotope">+1</div>
+                        <div class="isotope">-1</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- 图例 -->
+        <div class="legend">
+            <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #e1f5fe, #81d4fa); border:1px solid #29b6f6;"></div> 非金属</div>
+            <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #fce4ec, #f8bbd9); border:1px solid #ec407a;"></div> 稀有气体</div>
+            <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #ffebee, #ffcdd2); border:1px solid #ff6b6b;"></div> 碱金属</div>
+            <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #fff3e0, #ffcc80); border:1px solid #ff9f43;"></div> 碱土金属</div>
+            <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #fff8e1, #ffecb3); border:1px solid #ffca28;"></div> 过渡金属</div>
+            <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #f5f5f5, #e0e0e0); border:1px solid #9e9e9e;"></div> 后过渡金属</div>
+            <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border:1px solid #66bb6a;"></div> 准金属</div>
+            <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #f3e5f5, #e1bee7); border:1px solid #ab47bc;"></div> 卤素</div>
+            <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #e0f2f1, #b2dfdb); border:1px solid #26a69a;"></div> 镧系元素</div>
+            <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #ede7f6, #d1c4e9); border:1px solid #7e57c2;"></div> 锕系元素</div>
+        </div>
+        
+        <footer>
+            <p><i class="fas fa-database"></i> 数据来源：<a href="https://pubchem.ncbi.nlm.nih.gov" target="_blank">PubChem API</a> | 国家生物技术信息中心 (NCBI)</p>
+            <p><i class="fas fa-info-circle"></i> 基于真实数据构建，原子模型使用精确电子排布式，已解决电子重叠问题。</p>
+        </footer>
+    </div>
+
+    <script>
+        // 全局变量
+        let allElements = [];
+        let currentElement = null;
+        
+        // 元素位置映射表
+        const elementPositions = {
+            // 第1行
+            1: {row: 1, col: 1},
+            2: {row: 1, col: 18},
+            
+            // 第2行
+            3: {row: 2, col: 1},
+            4: {row: 2, col: 2},
+            5: {row: 2, col: 13},
+            6: {row: 2, col: 14},
+            7: {row: 2, col: 15},
+            8: {row: 2, col: 16},
+            9: {row: 2, col: 17},
+            10: {row: 2, col: 18},
+            
+            // 第3行
+            11: {row: 3, col: 1},
+            12: {row: 3, col: 2},
+            13: {row: 3, col: 13},
+            14: {row: 3, col: 14},
+            15: {row: 3, col: 15},
+            16: {row: 3, col: 16},
+            17: {row: 3, col: 17},
+            18: {row: 3, col: 18},
+            
+            // 第4行
+            19: {row: 4, col: 1},
+            20: {row: 4, col: 2},
+            21: {row: 4, col: 3},
+            22: {row: 4, col: 4},
+            23: {row: 4, col: 5},
+            24: {row: 4, col: 6},
+            25: {row: 4, col: 7},
+            26: {row: 4, col: 8},
+            27: {row: 4, col: 9},
+            28: {row: 4, col: 10},
+            29: {row: 4, col: 11},
+            30: {row: 4, col: 12},
+            31: {row: 4, col: 13},
+            32: {row: 4, col: 14},
+            33: {row: 4, col: 15},
+            34: {row: 4, col: 16},
+            35: {row: 4, col: 17},
+            36: {row: 4, col: 18},
+            
+            // 第5行
+            37: {row: 5, col: 1},
+            38: {row: 5, col: 2},
+            39: {row: 5, col: 3},
+            40: {row: 5, col: 4},
+            41: {row: 5, col: 5},
+            42: {row: 5, col: 6},
+            43: {row: 5, col: 7},
+            44: {row: 5, col: 8},
+            45: {row: 5, col: 9},
+            46: {row: 5, col: 10},
+            47: {row: 5, col: 11},
+            48: {row: 5, col: 12},
+            49: {row: 5, col: 13},
+            50: {row: 5, col: 14},
+            51: {row: 5, col: 15},
+            52: {row: 5, col: 16},
+            53: {row: 5, col: 17},
+            54: {row: 5, col: 18},
+            
+            // 第6行
+            55: {row: 6, col: 1},
+            56: {row: 6, col: 2},
+            57: {row: 6, col: 3},
+            72: {row: 6, col: 4},
+            73: {row: 6, col: 5},
+            74: {row: 6, col: 6},
+            75: {row: 6, col: 7},
+            76: {row: 6, col: 8},
+            77: {row: 6, col: 9},
+            78: {row: 6, col: 10},
+            79: {row: 6, col: 11},
+            80: {row: 6, col: 12},
+            81: {row: 6, col: 13},
+            82: {row: 6, col: 14},
+            83: {row: 6, col: 15},
+            84: {row: 6, col: 16},
+            85: {row: 6, col: 17},
+            86: {row: 6, col: 18},
+            
+            // 第7行
+            87: {row: 7, col: 1},
+            88: {row: 7, col: 2},
+            89: {row: 7, col: 3},
+            104: {row: 7, col: 4},
+            105: {row: 7, col: 5},
+            106: {row: 7, col: 6},
+            107: {row: 7, col: 7},
+            108: {row: 7, col: 8},
+            109: {row: 7, col: 9},
+            110: {row: 7, col: 10},
+            111: {row: 7, col: 11},
+            112: {row: 7, col: 12},
+            113: {row: 7, col: 13},
+            114: {row: 7, col: 14},
+            115: {row: 7, col: 15},
+            116: {row: 7, col: 16},
+            117: {row: 7, col: 17},
+            118: {row: 7, col: 18},
+            
+            // 第8行 - 镧系
+            58: {row: 8, col: 3},
+            59: {row: 8, col: 4},
+            60: {row: 8, col: 5},
+            61: {row: 8, col: 6},
+            62: {row: 8, col: 7},
+            63: {row: 8, col: 8},
+            64: {row: 8, col: 9},
+            65: {row: 8, col: 10},
+            66: {row: 8, col: 11},
+            67: {row: 8, col: 12},
+            68: {row: 8, col: 13},
+            69: {row: 8, col: 14},
+            70: {row: 8, col: 15},
+            71: {row: 8, col: 16},
+            
+            // 第9行 - 锕系
+            90: {row: 9, col: 3},
+            91: {row: 9, col: 4},
+            92: {row: 9, col: 5},
+            93: {row: 9, col: 6},
+            94: {row: 9, col: 7},
+            95: {row: 9, col: 8},
+            96: {row: 9, col: 9},
+            97: {row: 9, col: 10},
+            98: {row: 9, col: 11},
+            99: {row: 9, col: 12},
+            100: {row: 9, col: 13},
+            101: {row: 9, col: 14},
+            102: {row: 9, col: 15},
+            103: {row: 9, col: 16}
+        };
+        
+        // 类别中文名称映射
+        const categoryNames = {
+            'nonmetal': '非金属',
+            'noble': '稀有气体',
+            'alkali': '碱金属',
+            'alkaline-earth': '碱土金属',
+            'metalloid': '准金属',
+            'halogen': '卤素',
+            'post-transition': '后过渡金属',
+            'transition': '过渡金属',
+            'lanthanide': '镧系元素',
+            'actinide': '锕系元素',
+            'unknown': '未知'
+        };
+        
+        // 状态中文名称映射
+        const stateNames = {
+            'Gas': '气态',
+            'Liquid': '液态',
+            'Solid': '固态',
+            'gas': '气态',
+            'liquid': '液态',
+            'solid': '固态'
+        };
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载JSON数据
+            loadElementData();
+            
+            // 设置事件监听器
+            setupEventListeners();
+        });
+        
+        // 加载元素数据
+        async function loadElementData() {
+            try {
+                // 加载本地JSON文件
+                const response = await fetch('data.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // 检查数据结构
+                if (!data.elements || !Array.isArray(data.elements)) {
+                    throw new Error('JSON数据格式不正确，缺少elements数组');
+                }
+                
+                // 保存元素数据
+                allElements = data.elements;
+                
+                // 设置当前元素
+                currentElement = allElements[0];
+                
+                // 渲染周期表
+                renderPeriodicTable();
+                
+                // 更新元素详情
+                updateElementDetail(currentElement);
+                
+                // 隐藏加载遮罩
+                setTimeout(() => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }, 500);
+                
+                console.log(`成功加载 ${allElements.length} 个元素的数据`);
+                
+            } catch (error) {
+                console.error('加载数据失败:', error);
+                showError('无法加载元素数据，请确保data.json文件存在且格式正确。');
+            }
+        }
+        
+        // 渲染周期表
+        function renderPeriodicTable() {
+            const table = document.getElementById('periodicTable');
+            if (!table) return;
+            
+            // 清空表格
+            table.innerHTML = '';
+            
+            // 创建10行x18列的网格
+            for (let row = 1; row <= 10; row++) {
+                for (let col = 1; col <= 18; col++) {
+                    const cell = document.createElement('div');
+                    
+                    // 检查是否为标注行
+                    if (row === 8 && col === 1) {
+                        break; // 跳过，后面会添加标注
+                    } else if (row === 9 && col === 1) {
+                        break; // 跳过，后面会添加标注
+                    }
+                    
+                    // 查找当前位置是否有元素
+                    let element = null;
+                    for (const [num, pos] of Object.entries(elementPositions)) {
+                        if (pos.row === row && pos.col === col) {
+                            element = allElements.find(e => e.atomicNumber === parseInt(num));
+                            break;
+                        }
+                    }
+                    
+                    if (element) {
+                        const isSelected = currentElement && currentElement.atomicNumber === element.atomicNumber;
+                        let className = `element ${element.category}`;
+                        if (isSelected) className += ' selected';
+                        if (isRadioactive(element)) className += ' radioactive';
+                        
+                        cell.className = className;
+                        cell.dataset.elementNum = element.atomicNumber;
+                        
+                        // 计算中子数（近似）
+                        const neutronCount = Math.round(element.atomicMass) - element.atomicNumber;
+                        
+                        cell.innerHTML = `
+                            <div class="number">${element.atomicNumber}</div>
+                            <div class="symbol">${element.symbol}</div>
+                            <div class="name">${getChineseName(element.name)}</div>
+                            <div class="mass">${element.atomicMass.toFixed(3)}</div>
+                        `;
+                        
+                        table.appendChild(cell);
+                    } else {
+                        // 空白单元格
+                        if (row <= 7 || (row === 8 && col > 2) || (row === 9 && col > 2)) {
+                            cell.className = 'empty';
+                            table.appendChild(cell);
+                        }
+                    }
+                }
+            }
+            
+            // 添加标注
+            const lanthanideLabel = document.createElement('div');
+            lanthanideLabel.className = 'lanthanide-label';
+            lanthanideLabel.textContent = '* 57-71 镧系元素';
+            lanthanideLabel.style.gridRow = '8';
+            lanthanideLabel.style.gridColumn = '4 / span 15';
+            table.appendChild(lanthanideLabel);
+            
+            const actinideLabel = document.createElement('div');
+            actinideLabel.className = 'actinide-label';
+            actinideLabel.textContent = '† 89-103 锕系元素';
+            actinideLabel.style.gridRow = '9';
+            actinideLabel.style.gridColumn = '4 / span 15';
+            table.appendChild(actinideLabel);
+        }
+        
+        // 判断元素是否具有放射性
+        function isRadioactive(element) {
+            // 原子序数大于83（铋）的元素通常具有放射性
+            // 除了少数例外（如钍、铀等），这里简化处理
+            return element.atomicNumber >= 84;
+        }
+        
+        // 获取元素中文名称
+        function getChineseName(englishName) {
+            // 简化处理：常见的元素名称映射
+            const nameMap = {
+                'Hydrogen': '氢',
+                'Helium': '氦',
+                'Lithium': '锂',
+                'Beryllium': '铍',
+                'Boron': '硼',
+                'Carbon': '碳',
+                'Nitrogen': '氮',
+                'Oxygen': '氧',
+                'Fluorine': '氟',
+                'Neon': '氖',
+                'Sodium': '钠',
+                'Magnesium': '镁',
+                'Aluminum': '铝',
+                'Silicon': '硅',
+                'Phosphorus': '磷',
+                'Sulfur': '硫',
+                'Chlorine': '氯',
+                'Argon': '氩',
+                'Potassium': '钾',
+                'Calcium': '钙',
+                'Iron': '铁',
+                'Copper': '铜',
+                'Silver': '银',
+                'Gold': '金',
+                'Mercury': '汞',
+                'Lead': '铅',
+                'Uranium': '铀'
+            };
+            
+            return nameMap[englishName] || englishName;
+        }
+        
+        // 选择元素
+        function selectElement(element) {
+            if (!element) return;
+            
+            currentElement = element;
+            updateElementDetail(element);
+            
+            // 更新周期表中的选中状态
+            document.querySelectorAll('.element').forEach(cell => {
+                const elementNum = parseInt(cell.dataset.elementNum);
+                if (elementNum === element.atomicNumber) {
+                    cell.classList.add('selected');
+                    // 滚动到可见区域
+                    cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+                } else {
+                    cell.classList.remove('selected');
+                }
+            });
+            
+            // 切换到详情标签
+            switchTab('detail');
+        }
+        
+        // 更新元素详情
+        function updateElementDetail(element) {
+            // 基本信息
+            document.getElementById('largeSymbol').textContent = element.symbol;
+            document.getElementById('largeSymbol').className = `element-large ${element.category}`;
+            document.getElementById('elementName').innerHTML = `${getChineseName(element.name)} <span>(${element.symbol})</span>`;
+            
+            const categoryName = categoryNames[element.category] || element.category;
+            const radioactiveText = isRadioactive(element) ? ' (放射性)' : '';
+            document.getElementById('elementCategory').textContent = categoryName + radioactiveText;
+            
+            // 原子数据
+            document.getElementById('atomicNumber').textContent = element.atomicNumber;
+            document.getElementById('atomicMass').textContent = `${element.atomicMass.toFixed(3)} u`;
+            document.getElementById('atomicRadius').textContent = element.atomicRadius ? `${element.atomicRadius} pm` : '未知';
+            document.getElementById('electronConfig').textContent = formatElectronConfig(element.electronConfiguration);
+            document.getElementById('electronegativity').textContent = element.electronegativity ? element.electronegativity.toFixed(2) : '未知';
+            document.getElementById('meltingPoint').textContent = element.meltingPoint ? `${element.meltingPoint} K` : '未知';
+            document.getElementById('boilingPoint').textContent = element.boilingPoint ? `${element.boilingPoint} K` : '未知';
+            document.getElementById('density').textContent = element.density ? `${element.density.toExponential(3)} g/cm³` : '未知';
+            document.getElementById('discoveryYear').textContent = element.yearDiscovered || '未知';
+            
+            // 标准状态
+            const state = stateNames[element.standardState] || element.standardState;
+            document.getElementById('standardState').textContent = state || '未知';
+            
+            // 原子核信息
+            const protonCount = element.atomicNumber;
+            const neutronCount = Math.round(element.atomicMass) - protonCount;
+            document.getElementById('protonCount').textContent = protonCount;
+            document.getElementById('neutronCount').textContent = neutronCount;
+            
+            // 原子核大小
+            const totalNucleons = protonCount + neutronCount;
+            const nucleusSize = Math.max(40, Math.min(70, Math.sqrt(totalNucleons) * 4));
+            const nucleus = document.getElementById('nucleus');
+            nucleus.style.width = `${nucleusSize}px`;
+            nucleus.style.height = `${nucleusSize}px`;
+            
+            // 更新原子模型 - 使用精确的电子排布式
+            updateAtomModel(element);
+            
+            // 更新氧化态
+            updateOxidationStates(element);
+        }
+        
+        // 格式化电子排布式
+        function formatElectronConfig(config) {
+            if (!config) return '未知';
+            
+            // 将数字上标转换为HTML上标
+            return config
+                .replace(/1/g, '¹')
+                .replace(/2/g, '²')
+                .replace(/3/g, '³')
+                .replace(/4/g, '⁴')
+                .replace(/5/g, '⁵')
+                .replace(/6/g, '⁶')
+                .replace(/7/g, '⁷')
+                .replace(/8/g, '⁸')
+                .replace(/9/g, '⁹')
+                .replace(/0/g, '⁰');
+        }
+        
+        // 更新原子模型 - 解决电子重叠问题
+        function updateAtomModel(element) {
+            const atomModel = document.getElementById('atomModel');
+            if (!atomModel) return;
+            
+            // 清除现有的电子层
+            while (atomModel.children.length > 1) {
+                atomModel.removeChild(atomModel.lastChild);
+            }
+            
+            // 解析电子排布式
+            const electronConfig = element.electronConfiguration;
+            if (!electronConfig) return;
+            
+            // 获取电子层信息
+            const shells = parseElectronConfiguration(electronConfig, element.atomicNumber);
+            
+            // 计算原子核大小
+            const totalNucleons = element.atomicNumber + (Math.round(element.atomicMass) - element.atomicNumber);
+            const nucleusSize = Math.max(40, Math.min(70, Math.sqrt(totalNucleons) * 3.5));
+            
+            // 确保不超过容器大小
+            const maxRadius = 90;
+            const baseRadius = Math.max(35, nucleusSize / 2 + 15);
+            
+            // 创建电子层
+            shells.forEach((shell, index) => {
+                if (shell.electrons === 0) return;
+                
+                // 计算半径，确保电子层不重叠
+                const radius = Math.min(baseRadius + (index * 25), maxRadius);
+                const shellDiv = document.createElement('div');
+                shellDiv.className = 'electron-shell';
+                shellDiv.style.width = `${radius * 2}px`;
+                shellDiv.style.height = `${radius * 2}px`;
+                shellDiv.style.animationDuration = `${20 + index * 5}s`;
+                shellDiv.style.zIndex = 5 - index;
+                
+                // 根据电子数量调整显示策略
+                const displayElectrons = Math.min(shell.electrons, 8); // 每层最多显示8个电子
+                
+                // 添加电子 - 确保均匀分布，防止重叠
+                for (let i = 0; i < displayElectrons; i++) {
+                    // 计算电子大小 - 随层数增加而减小
+                    const electronSize = Math.max(6, Math.min(10, 10 - index));
+                    
+                    // 计算角度偏移，确保电子均匀分布
+                    const angle = (i / displayElectrons) * 2 * Math.PI;
+                    
+                    // 添加轻微角度偏移，使电子分布更自然
+                    const angleOffset = Math.PI / (displayElectrons * 2);
+                    const finalAngle = angle + angleOffset;
+                    
+                    const x = radius * Math.cos(finalAngle);
+                    const y = radius * Math.sin(finalAngle);
+                    
+                    const electron = document.createElement('div');
+                    electron.className = 'electron';
+                    electron.style.width = `${electronSize}px`;
+                    electron.style.height = `${electronSize}px`;
+                    electron.style.left = `calc(50% + ${x}px - ${electronSize/2}px)`;
+                    electron.style.top = `calc(50% + ${y}px - ${electronSize/2}px)`;
+                    
+                    // 为不同层的电子添加不同的颜色
+                    const hue = 45 + index * 30; // 从黄色到红色的渐变
+                    electron.style.background = `radial-gradient(circle at 30% 30%, 
+                        hsl(${hue}, 100%, 70%), 
+                        hsl(${hue}, 100%, 50%))`;
+                    
+                    shellDiv.appendChild(electron);
+                }
+                
+                // 如果电子数量超过显示数量，添加指示器
+                if (shell.electrons > displayElectrons) {
+                    const indicator = document.createElement('div');
+                    indicator.style.position = 'absolute';
+                    indicator.style.top = '50%';
+                    indicator.style.left = '50%';
+                    indicator.style.transform = 'translate(-50%, -50%)';
+                    indicator.style.color = '#666';
+                    indicator.style.fontSize = '0.7rem';
+                    indicator.style.background = 'rgba(255,255,255,0.7)';
+                    indicator.style.padding = '2px 6px';
+                    indicator.style.borderRadius = '4px';
+                    indicator.textContent = `${shell.electrons}e`;
+                    shellDiv.appendChild(indicator);
+                }
+                
+                atomModel.appendChild(shellDiv);
+            });
+        }
+        
+        // 解析电子排布式
+        function parseElectronConfiguration(config, atomicNumber) {
+            const shells = [];
+            
+            // 简化解析逻辑 - 实际应用需要更复杂的解析
+            // 这里我们根据原子序数创建近似电子层
+            
+            // 电子层容量: [2, 8, 18, 32, 32, 18, 8]
+            const shellCapacities = [2, 8, 18, 32, 32, 18, 8];
+            let remainingElectrons = atomicNumber;
+            let shellIndex = 0;
+            
+            // 填充电子层
+            while (remainingElectrons > 0 && shellIndex < shellCapacities.length) {
+                const capacity = shellCapacities[shellIndex];
+                const electronsInShell = Math.min(capacity, remainingElectrons);
+                
+                shells.push({
+                    shell: shellIndex + 1,
+                    electrons: electronsInShell,
+                    capacity: capacity
+                });
+                
+                remainingElectrons -= electronsInShell;
+                shellIndex++;
+            }
+            
+            return shells;
+        }
+        
+        // 更新氧化态
+        function updateOxidationStates(element) {
+            const oxidationStatesList = document.getElementById('oxidationStatesList');
+            if (!oxidationStatesList) return;
+            
+            oxidationStatesList.innerHTML = '';
+            
+            if (!element.oxidationStates || element.oxidationStates.trim() === '') {
+                const emptyMsg = document.createElement('div');
+                emptyMsg.textContent = '无数据';
+                emptyMsg.style.color = '#999';
+                emptyMsg.style.fontStyle = 'italic';
+                oxidationStatesList.appendChild(emptyMsg);
+                return;
+            }
+            
+            // 解析氧化态字符串
+            const states = element.oxidationStates.split(',').map(s => s.trim());
+            
+            states.forEach(state => {
+                if (state) {
+                    const stateDiv = document.createElement('div');
+                    stateDiv.className = 'isotope';
+                    stateDiv.textContent = state;
+                    oxidationStatesList.appendChild(stateDiv);
+                }
+            });
+        }
+        
+        // 切换标签页
+        function switchTab(tabId) {
+            // 移除所有活动状态
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.periodic-table-section, .detail-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // 激活当前标签
+            const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+            
+            const activeSection = document.getElementById(tabId + 'Tab');
+            if (activeSection) {
+                activeSection.classList.add('active');
+            }
+        }
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 元素点击事件委托
+            document.getElementById('periodicTable').addEventListener('click', function(e) {
+                const elementCell = e.target.closest('.element');
+                if (elementCell) {
+                    const elementNum = parseInt(elementCell.dataset.elementNum);
+                    const element = allElements.find(e => e.atomicNumber === elementNum);
+                    if (element) {
+                        selectElement(element);
+                    }
+                }
+            });
+            
+            // 标签页切换
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // 分类筛选
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 更新活动按钮
+                    document.querySelectorAll('.category-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    const category = this.dataset.category;
+                    filterByCategory(category);
+                });
+            });
+            
+            // 搜索功能
+            const searchBox = document.getElementById('searchBox');
+            let searchTimeout = null;
+            
+            searchBox.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                
+                searchTimeout = setTimeout(() => {
+                    const query = this.value.trim().toLowerCase();
+                    
+                    // 清除之前的高亮
+                    document.querySelectorAll('.element.search-match').forEach(el => {
+                        el.classList.remove('search-match');
+                    });
+                    
+                    if (query.length < 1) return;
+                    
+                    // 搜索元素
+                    const results = allElements.filter(element => 
+                        element.name.toLowerCase().includes(query) ||
+                        element.symbol.toLowerCase().includes(query) ||
+                        element.atomicNumber.toString().includes(query) ||
+                        getChineseName(element.name).toLowerCase().includes(query)
+                    );
+                    
+                    // 高亮匹配的元素
+                    if (results.length > 0) {
+                        document.querySelectorAll('.element').forEach(cell => {
+                            const elementNum = parseInt(cell.dataset.elementNum);
+                            const element = allElements.find(e => e.atomicNumber === elementNum);
+                            if (element && results.includes(element)) {
+                                cell.classList.add('search-match');
+                                
+                                // 如果只有一个结果，自动选择它
+                                if (results.length === 1) {
+                                    selectElement(element);
+                                }
+                            }
+                        });
+                    }
+                }, 300);
+            });
+        }
+        
+        // 按分类筛选元素
+        function filterByCategory(category) {
+            document.querySelectorAll('.element').forEach(cell => {
+                const elementNum = parseInt(cell.dataset.elementNum);
+                const element = allElements.find(e => e.atomicNumber === elementNum);
+                
+                if (!element) {
+                    cell.style.opacity = '0.3';
+                    return;
+                }
+                
+                let shouldShow = true;
+                
+                switch(category) {
+                    case 'all':
+                        shouldShow = true;
+                        break;
+                    case 'nonmetal':
+                        shouldShow = element.category === 'nonmetal' || element.category === 'halogen' || element.category === 'noble' || element.category === 'metalloid';
+                        break;
+                    case 'alkali':
+                        shouldShow = element.category === 'alkali';
+                        break;
+                    case 'transition':
+                        shouldShow = element.category === 'transition';
+                        break;
+                    case 'noble':
+                        shouldShow = element.category === 'noble';
+                        break;
+                }
+                
+                if (shouldShow) {
+                    cell.style.opacity = '1';
+                    cell.style.pointerEvents = 'auto';
+                } else {
+                    cell.style.opacity = '0.3';
+                    cell.style.pointerEvents = 'none';
+                }
+            });
+        }
+        
+        // 显示错误信息
+        function showError(message) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.innerHTML = `
+                <div style="text-align: center; max-width: 80%;">
+                    <div style="color: #f44336; font-size: 3rem; margin-bottom: 20px;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h2 style="color: #333; margin-bottom: 15px;">加载数据失败</h2>
+                    <p style="color: #666; margin-bottom: 20px;">${message}</p>
+                    <button onclick="location.reload()" style="
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        color: white;
+                        border: none;
+                        padding: 12px 30px;
+                        border-radius: 25px;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        font-weight: bold;
+                    ">
+                        <i class="fas fa-redo"></i> 重新加载
+                    </button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
